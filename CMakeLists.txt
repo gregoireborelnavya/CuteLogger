@@ -1,31 +1,40 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.4)
-CMAKE_POLICY(SET CMP0003 NEW)
+cmake_minimum_required(VERSION 3.4)
+cmake_policy(SET CMP0003 NEW)
 
-PROJECT(cuteLogger)
+project(cuteLogger)
 
-IF(WIN32)
-    SET(LIBRARY_OUTPUT_PATH C:/Users/gregoire.borel/Documents/external_libs/cuteLogger/dll CACHE STRING "Path to the bin output" FORCE)
-    SET(Qt5Core_DIR C:/Qt/5.7/msvc2015_64/lib/cmake/Qt5Core)
-ELSE(UNIX)
-    SET(LIBRARY_OUTPUT_PATH /media/data/external_libs/cuteLogger/dll CACHE STRING "Path to the bin output" FORCE)
-    SET(Qt5Core_DIR /opt/Qt/5.7/gcc_64/lib/cmake/Qt5Core)
-ENDIF(WIN32)
+# Find OS architecture
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(EX_PLATFORM 64)
+else(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(EX_PLATFORM 32 )
+endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-if (${MSVC})
+if(WIN32)
+    set(LIBRARY_OUTPUT_PATH C:/users/gregoire.borel/Documents/external_libs/cuteLogger/dll CACHE STRING "Path to the bin output" FORCE)
+else(UNIX)
+    set(LIBRARY_OUTPUT_PATH /media/data/external_libs/cuteLogger/dll CACHE STRING "Path to the bin output" FORCE)
+    set(Qt5Core_DIR /opt/Qt/5.7/gcc_"${EX_PLATFORM}/lib/cmake/Qt5Core")
+endif(WIN32)
+
+
+if(${MSVC})
     if (${MSVC_VERSION} EQUAL 1800)
         set(NAVYA_COMPILER_VERSION "vc120-mt")
+        set(Qt5Core_DIR "C:/Qt/5.7/msvc2013_${EX_PLATFORM}/lib/cmake/Qt5Core")
     elseif(${MSVC_VERSION} EQUAL 1900)
         set(NAVYA_COMPILER_VERSION "vc140-mt")
+        set(Qt5Core_DIR "C:/Qt/5.7/msvc2015_${EX_PLATFORM}/lib/cmake/Qt5Core")
     endif(MSVC12)
 endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 
-ADD_DEFINITIONS(-DCUTELOGGER_LIBRARY)
+add_definitions(-DCUTELOGGER_LIBRARY)
 
-FIND_PACKAGE(Qt5Core 5.7.0 REQUIRED)
+find_package(Qt5Core 5.7.0 REQUIRED)
 
-INCLUDE_DIRECTORIES(BEFORE include)
+include_directories(BEFORE include)
 
-SET(${PROJECT_NAME}_SOURCES
+set(${PROJECT_NAME}_SOURCES
   src/Logger.cpp
   src/AbstractAppender.cpp
   src/AbstractStringAppender.cpp
@@ -43,12 +52,12 @@ SET(${PROJECT_NAME}_SOURCES
 )
 
 # OutputDebugAppender is only for Windows systems
-IF(WIN32)
-  SET(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES}
+if(WIN32)
+  set(${PROJECT_NAME}_SOURCES ${${PROJECT_NAME}_SOURCES}
       src/OutputDebugAppender.cpp include/OutputDebugAppender.h)
-ENDIF(WIN32)
+endif(WIN32)
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_SOURCES})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} Qt5::Core)
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-${NAVYA_COMPILER_VERSION}")
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
+add_library(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_SOURCES})
+target_link_libraries(${PROJECT_NAME} Qt5::Core)
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-${NAVYA_COMPILER_VERSION}")
+set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
