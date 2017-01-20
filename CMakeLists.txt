@@ -3,6 +3,8 @@ cmake_policy(SET CMP0003 NEW)
 
 project(cuteLogger)
 
+set(CMAKE_AUTOMOC ON)
+
 # Find OS architecture
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(EX_PLATFORM 64)
