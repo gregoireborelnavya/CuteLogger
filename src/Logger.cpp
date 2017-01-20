@@ -973,6 +973,8 @@ void Logger::write(const QDateTime& timeStamp, LogLevel logLevel, const char* fi
     std::cerr << qPrintable(result) << std::endl;
 #endif
   }
+  else
+    emit logWritten({timeStamp, levelToString(logLevel), QString(file), line, QString(function), QString(category), message});
 
   if (logLevel == Logger::Fatal)
     abort();

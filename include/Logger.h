@@ -67,10 +67,21 @@ CUTELOGGERSHARED_EXPORT Logger* loggerInstance();
       return &customLoggerInstance;\
     }\
 
+struct LogData
+{
+    const QDateTime timeStamp;
+    const QString logLevel;
+    const QString file;
+    const int line;
+    const QString function;
+    const QString category;
+    const QString message;
+};
 
 class LoggerPrivate;
-class CUTELOGGERSHARED_EXPORT Logger
+class CUTELOGGERSHARED_EXPORT Logger : public QObject
 {
+  Q_OBJECT
   Q_DISABLE_COPY(Logger)
 
   public:
@@ -117,6 +128,9 @@ class CUTELOGGERSHARED_EXPORT Logger
     QDebug write(LogLevel logLevel, const char* file, int line, const char* function, const char* category);
 
     void writeAssert(const char* file, int line, const char* function, const char* condition);
+
+  signals:
+    void logWritten(const LogData&);
 
   private:
     void write(const QDateTime& timeStamp, LogLevel logLevel, const char* file, int line, const char* function, const char* category,
