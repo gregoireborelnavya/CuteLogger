@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.7)
 cmake_policy(SET CMP0003 NEW)
 
 project(cuteLogger)
@@ -16,23 +16,23 @@ if(WIN32)
     set(LIBRARY_OUTPUT_PATH C:/users/gregoire.borel/Documents/external_libs/cuteLogger/dll CACHE STRING "Path to the bin output" FORCE)
 else(UNIX)
     set(LIBRARY_OUTPUT_PATH /media/data/external_libs/cuteLogger/dll CACHE STRING "Path to the bin output" FORCE)
-    set(Qt5Core_DIR /opt/Qt/5.7/gcc_"${EX_PLATFORM}/lib/cmake/Qt5Core")
+    set(Qt5Core_DIR /opt/Qt/5.9/gcc_"${EX_PLATFORM}/lib/cmake/Qt5Core")
+    find_package(Qt5Core 5.9.0 REQUIRED)
 endif(WIN32)
-
 
 if(${MSVC})
     if (${MSVC_VERSION} EQUAL 1800)
         set(NAVYA_COMPILER_VERSION "vc120-mt")
         set(Qt5Core_DIR "C:/Qt/5.7/msvc2013_${EX_PLATFORM}/lib/cmake/Qt5Core")
+        find_package(Qt5Core 5.7.0 REQUIRED)
     elseif(${MSVC_VERSION} EQUAL 1900)
         set(NAVYA_COMPILER_VERSION "vc140-mt")
-        set(Qt5Core_DIR "C:/Qt/5.7/msvc2015_${EX_PLATFORM}/lib/cmake/Qt5Core")
-    endif(MSVC12)
-endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+        set(Qt5Core_DIR "C:/Qt/5.9/msvc2015_${EX_PLATFORM}/lib/cmake/Qt5Core")
+        find_package(Qt5Core 5.9.0 REQUIRED)
+    endif(${MSVC_VERSION} EQUAL 1800)
+endif(${MSVC})
 
 add_definitions(-DCUTELOGGER_LIBRARY)
-
-find_package(Qt5Core 5.7.0 REQUIRED)
 
 include_directories(BEFORE include)
 
