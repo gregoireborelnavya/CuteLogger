@@ -69,13 +69,17 @@ CUTELOGGERSHARED_EXPORT Logger* loggerInstance();
 
 struct LogData
 {
-    const QDateTime timeStamp;
-    const QString logLevel;
-    const QString file;
-    const int line;
-    const QString function;
-    const QString category;
-    const QString message;
+    inline LogData() {}
+    inline LogData(const QDateTime ts, const QString ll, const QString f, const int l, const QString func, const QString c, const QString m) :
+        timeStamp(ts), logLevel(ll), file(f), line(l), function(func), category(c), message(m) {}
+
+    QDateTime timeStamp;
+    QString logLevel;
+    QString file;
+    int line;
+    QString function;
+    QString category;
+    QString message;
 };
 
 class LoggerPrivate;
